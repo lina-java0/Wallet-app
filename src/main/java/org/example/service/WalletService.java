@@ -11,3 +11,4 @@ public interface WalletService {
 
     WalletBalanceResponse getBalance(UUID walletId);
 }
+

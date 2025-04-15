@@ -1,7 +1,6 @@
 package org.example.service;
 
 import jakarta.transaction.Transactional;
-import lombok.Setter;
 import org.example.dto.WalletBalanceResponse;
 import org.example.dto.WalletOperationRequest;
 import org.example.exception.InsufficientFundsException;
@@ -15,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
-public class WalletServiceImpl implements WalletService{
+public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
 
@@ -25,16 +24,24 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     @Transactional
+    /*
+    @Transactional — говорит Spring: "все действия в методе должны быть выполнены в рамках одной транзакции".
+    Если возникнет исключение — всё откатится.
+     */
     public void processOperation(WalletOperationRequest request) {
-        Wallet wallet = walletRepository.findById(request.getWalletId())
-                .orElseGet(() -> {
-                    Wallet newWallet = new Wallet();
-                    newWallet.setWalletId(request.getWalletId());
-                    newWallet.setBalance(BigDecimal.ZERO);
-                    return newWallet;
-                });
+        Wallet wallet = walletRepository.findById(request.getWalletId()).orElse(null);
+
+        if (wallet == null) {
+            wallet = new Wallet();
+            wallet.setWalletId(request.getWalletId());
+            wallet.setBalance(BigDecimal.ZERO);
+        }
 
         BigDecimal amount = request.getAmount();
+
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero");
+        }
 
         if (request.getOperationType() == OperationType.DEPOSIT) {
             wallet.setBalance(wallet.getBalance().add(amount));
@@ -53,6 +60,6 @@ public class WalletServiceImpl implements WalletService{
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new WalletNotFoundException("Wallet not found"));
 
-        return  new WalletBalanceResponse(wallet.getWalletId(), wallet.getBalance());
+        return new WalletBalanceResponse(wallet.getWalletId(), wallet.getBalance());
     }
 }
