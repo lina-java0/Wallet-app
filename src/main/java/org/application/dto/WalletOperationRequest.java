@@ -1,21 +1,18 @@
-package org.example.dto;
+package org.application.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import org.example.model.OperationType;
+import org.application.dto.model.OperationType;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-/*
-Суть WalletOperationRequest: это DTO, который приходит в теле запроса @RequestBody.
-Он содержит информацию о том, что хочет сделать пользователь.
- */
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class WalletOperationRequest {
     @NotNull
     private UUID walletId;

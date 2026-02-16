@@ -1,4 +1,4 @@
-package org.example.model;
+package org.application.dto.model;
 
 public enum OperationType {
     DEPOSIT,
