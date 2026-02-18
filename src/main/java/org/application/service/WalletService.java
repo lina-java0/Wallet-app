@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface WalletService {
 
+    UUID createWallet(UUID walletId);
+
     BigDecimal processOperation(WalletOperationRequest request);
 
     WalletBalanceResponse getBalance(UUID walletId);

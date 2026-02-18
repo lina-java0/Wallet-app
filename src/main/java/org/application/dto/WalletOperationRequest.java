@@ -4,7 +4,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import org.application.dto.model.OperationType;
+import org.application.service.model.OperationType;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -13,14 +13,15 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class WalletOperationRequest {
-    @NotNull
+    @NotNull(message = "Wallet id must not be null")
     private UUID walletId;
 
-    @NotNull
+    @NotNull(message = "Operation type must not be null")
     private OperationType operationType;
 
-    @NotNull
+    @NotNull(message = "Amount must not be null")
     @DecimalMin("0.01")
     private BigDecimal amount;
 }

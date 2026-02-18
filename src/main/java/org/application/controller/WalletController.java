@@ -2,9 +2,11 @@ package org.application.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.application.dto.CreateWalletRequest;
 import org.application.dto.WalletOperationRequest;
 import org.application.dto.WalletBalanceResponse;
 import org.application.service.WalletService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -18,7 +20,13 @@ public class WalletController {
     private final WalletService walletService;
 
     @PostMapping
-    public WalletBalanceResponse processOperation(@Valid @RequestBody WalletOperationRequest request) {
+    public ResponseEntity<UUID> createWallet(@RequestBody @Valid CreateWalletRequest request) {
+        UUID id = walletService.createWallet(request.walletId());
+        return ResponseEntity.status(201).body(id);
+    }
+
+    @PostMapping("/operation")
+    public WalletBalanceResponse processOperation(@RequestBody @Valid WalletOperationRequest request) {
         BigDecimal balance = walletService.processOperation(request);
         return new WalletBalanceResponse(request.getWalletId(), balance);
     }

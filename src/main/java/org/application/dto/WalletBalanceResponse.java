@@ -11,6 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class WalletBalanceResponse {
+
     private UUID walletId;
 
     private BigDecimal balance;

@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://wallet_db:5432/wallet_db
+    username: postgres
+    password: postgres

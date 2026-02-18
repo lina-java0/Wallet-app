@@ -1,11 +1,11 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:21
+
+ARG JAR_FILE
 
 WORKDIR /app
 
-COPY build/libs/wallet-app.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+COPY ${JAR_FILE} app.jar
 
 EXPOSE 8080
 
-
+CMD ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
