@@ -6,32 +6,40 @@ import org.application.exception.WalletNotFoundException;
 import org.application.repository.WalletRepository;
 import org.application.repository.entities.WalletEntity;
 import org.application.service.operation.OperationStrategy;
+import org.application.service.operation.OperationStrategyFactory;
+import org.hibernate.PessimisticLockException;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class WalletTransactionalService {
 
     private final WalletRepository walletRepository;
-    private final List<OperationStrategy> strategies;
+    private final OperationStrategyFactory strategyFactory;
 
+    @Retryable(
+            retryFor = {
+                    PessimisticLockException.class,
+                    CannotAcquireLockException.class
+            },
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 50)
+    )
     @Transactional
     public BigDecimal process(WalletOperationRequest request) {
-        WalletEntity wallet = walletRepository.findById(request.getWalletId())
+
+        WalletEntity wallet = walletRepository.findByIdForUpdate(request.getWalletId())
                 .orElseThrow(() -> new WalletNotFoundException("Wallet not found"));
 
-        OperationStrategy strategy = strategies.stream()
-                .filter(s -> s.getType() == request.getOperationType())
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown operation"));
+        OperationStrategy strategy = strategyFactory.getStrategy(request.getOperationType());
 
-        strategy.apply(wallet, request.getAmount());
-
-        walletRepository.save(wallet);
+        strategy.apply(wallet, request);
 
         return wallet.getBalance();
     }

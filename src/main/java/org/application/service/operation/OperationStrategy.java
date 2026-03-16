@@ -1,13 +1,12 @@
 package org.application.service.operation;
 
+import org.application.dto.WalletOperationRequest;
 import org.application.repository.entities.WalletEntity;
 import org.application.service.model.OperationType;
-
-import java.math.BigDecimal;
 
 public interface OperationStrategy {
 
     OperationType getType();
 
-    void apply(WalletEntity wallet, BigDecimal amount);
+    void apply(WalletEntity wallet, WalletOperationRequest request);
 }

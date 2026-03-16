@@ -12,6 +12,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WalletEntity {
 
     @Id
@@ -19,5 +20,8 @@ public class WalletEntity {
     private UUID walletId;
 
     @Column(name = "balance", nullable = false)
-    private BigDecimal balance = BigDecimal.ZERO;
+    private BigDecimal balance;
+
+    @Version
+    private Long version;
 }

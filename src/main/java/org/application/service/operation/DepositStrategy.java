@@ -1,14 +1,17 @@
 package org.application.service.operation;
 
+import lombok.RequiredArgsConstructor;
+import org.application.dto.WalletOperationRequest;
 import org.application.repository.entities.WalletEntity;
 import org.application.service.model.OperationType;
+import org.application.validation.OperationDepositValidation;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 @Component
+@RequiredArgsConstructor
 public class DepositStrategy implements OperationStrategy {
 
+    private final OperationDepositValidation validation;
 
     @Override
     public OperationType getType() {
@@ -16,7 +19,8 @@ public class DepositStrategy implements OperationStrategy {
     }
 
     @Override
-    public void apply(WalletEntity wallet, BigDecimal amount) {
-        wallet.setBalance(wallet.getBalance().add(amount));
+    public void apply(WalletEntity wallet, WalletOperationRequest request) {
+        validation.validateOperation(wallet, request);
+        wallet.setBalance(wallet.getBalance().add(request.getAmount()));
     }
 }

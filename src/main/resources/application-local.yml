@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:wallet
+    url: jdbc:h2:mem:wallet;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -8,3 +8,4 @@ spring:
   h2:
     console:
       enabled: true
+      path: /h2-console

@@ -1,14 +1,17 @@
 package org.application.service.operation;
 
-import org.application.exception.InsufficientFundsException;
+import lombok.RequiredArgsConstructor;
+import org.application.dto.WalletOperationRequest;
 import org.application.repository.entities.WalletEntity;
 import org.application.service.model.OperationType;
+import org.application.validation.OperationWithdrawValidation;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 @Component
+@RequiredArgsConstructor
 public class WithdrawStrategy implements OperationStrategy {
+
+    private final OperationWithdrawValidation validation;
 
     @Override
     public OperationType getType() {
@@ -16,12 +19,8 @@ public class WithdrawStrategy implements OperationStrategy {
     }
 
     @Override
-    public void apply(WalletEntity wallet, BigDecimal amount) {
-
-        if (wallet.getBalance().compareTo(amount) < 0) {
-            throw new InsufficientFundsException("Not enough balance");
-        }
-
-        wallet.setBalance(wallet.getBalance().subtract(amount));
+    public void apply(WalletEntity wallet, WalletOperationRequest request) {
+        validation.validateOperation(wallet, request);
+        wallet.setBalance(wallet.getBalance().subtract(request.getAmount()));
     }
 }

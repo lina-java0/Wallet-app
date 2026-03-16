@@ -3,9 +3,6 @@ package org.application.service;
 import lombok.RequiredArgsConstructor;
 import org.application.dto.WalletBalanceResponse;
 import org.application.dto.WalletOperationRequest;
-import org.application.exception.WalletNotFoundException;
-import org.application.repository.entities.WalletEntity;
-import org.application.repository.WalletRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,7 +14,7 @@ public class WalletServiceImpl implements WalletService {
 
     private final WalletCreationService creationService;
     private final WalletTransactionalService transactionalService;
-    private final WalletRepository walletRepository;
+    private final WalletGetBalanceService getBalanceService;
 
     @Override
     public UUID createWallet(UUID walletId) {
@@ -31,9 +28,6 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public WalletBalanceResponse getBalance(UUID walletId) {
-        WalletEntity wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> new WalletNotFoundException("Wallet not found"));
-
-        return new WalletBalanceResponse(wallet.getWalletId(), wallet.getBalance());
+        return getBalanceService.getBalance(walletId);
     }
 }
