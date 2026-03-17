@@ -17,6 +17,8 @@ POST /api/v1/wallet
 "walletId": "UUID"
 }
 
+Пример id: "walletId": "11111111-1111-1111-1111-111111111111"
+
 Ответ:
 201 Created
 Тело ответа содержит UUID созданного кошелька.
@@ -67,7 +69,8 @@ GET /api/v1/wallet/{walletId}
 - PostgreSQL как основная база данных
 - H2 для тестирования
 - Используется BigDecimal для точных финансовых расчётов
-- Retry-механизм отсутствует
+- Retry-механизм
+- Используются блокировки (pessimistic locking) для корректной работы при конкурентных операциях
 
 **Запуск через Docker**
 Сборка Docker-образа
@@ -80,7 +83,7 @@ GET /api/v1/wallet/{walletId}
 http://localhost:8080
 
 **Технологический стек**
-- Java 17+
+- Java 17
 - Spring Boot 3
 - Spring Data JPA
 - PostgreSQL
