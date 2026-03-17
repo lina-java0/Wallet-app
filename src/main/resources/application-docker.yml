@@ -1,9 +1,5 @@
 spring:
   datasource:
-    url: jdbc:postgresql://wallet_db:5432/wallet_db
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-
-    jpa:
-      database-platform: org.hibernate.dialect.PostgreSQLDialect
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}

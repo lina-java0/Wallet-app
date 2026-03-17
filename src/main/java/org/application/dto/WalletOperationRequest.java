@@ -7,7 +7,6 @@ import org.application.service.model.OperationType;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,6 +20,6 @@ public class WalletOperationRequest {
     private OperationType operationType;
 
     @NotNull(message = "Amount must not be null")
-    @Positive
+    @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
     private BigDecimal amount;
 }

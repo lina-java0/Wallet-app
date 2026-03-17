@@ -14,6 +14,6 @@ import java.util.UUID;
 public interface WalletRepository extends JpaRepository<WalletEntity, UUID> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT w FROM WalletEntity w where w.id = :id")
-    Optional<WalletEntity> findByIdForUpdate(UUID id);
+    @Query("SELECT w FROM WalletEntity w where w.walletId = :walletId")
+    Optional<WalletEntity> findByIdForUpdate(UUID walletId);
 }

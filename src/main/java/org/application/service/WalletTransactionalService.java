@@ -1,6 +1,7 @@
 package org.application.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.application.dto.WalletOperationRequest;
 import org.application.exception.WalletNotFoundException;
 import org.application.repository.WalletRepository;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WalletTransactionalService {
@@ -26,10 +28,14 @@ public class WalletTransactionalService {
     @Retryable(
             retryFor = {
                     PessimisticLockException.class,
-                    CannotAcquireLockException.class
+                    CannotAcquireLockException.class,
+                    org.springframework.dao.PessimisticLockingFailureException.class
             },
-            maxAttempts = 3,
-            backoff = @Backoff(delay = 50)
+            maxAttemptsExpression = "#{${wallet.retry.max-attempts}}",
+            backoff = @Backoff(
+                    delayExpression = "#{${wallet.retry.delay}}",
+                    multiplierExpression = "#{${wallet.retry.multiplier}}"
+            )
     )
     @Transactional
     public BigDecimal process(WalletOperationRequest request) {

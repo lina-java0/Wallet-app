@@ -17,10 +17,10 @@ public class WalletMapper {
                 .build();
     }
 
-    public WalletBalanceResponse toBalanceResponse(WalletEntity walletEntity) {
-        return new WalletBalanceResponse(
-                walletEntity.getWalletId(),
-                walletEntity.getBalance()
-        );
+    public WalletBalanceResponse toResponse(WalletEntity walletEntity) {
+        return WalletBalanceResponse.builder()
+                .walletId(walletEntity.getWalletId())
+                .balance(walletEntity.getBalance())
+                .build();
     }
 }

@@ -23,6 +23,6 @@ public class WalletGetBalanceService {
         WalletEntity wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new WalletNotFoundException("Wallet not found"));
 
-        return walletMapper.toBalanceResponse(wallet);
+        return walletMapper.toResponse(wallet);
     }
 }

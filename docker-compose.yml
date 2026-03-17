@@ -1,10 +1,10 @@
-version: '1'
+version: '3.8'
 
 services:
 
   wallet_db:
-    container_name: postgres-container
     image: postgres:15
+    container_name: postgres-container
     environment:
       POSTGRES_DB: wallet_db
       POSTGRES_USER: postgres
@@ -13,9 +13,17 @@ services:
       - "5432:5432"
 
   wallet_app:
-    container_name: wallet-container
     image: wallet-app:1.0.0
+    container_name: wallet-container
     ports:
       - "8080:8080"
     depends_on:
       - wallet_db
+    environment:
+      DB_URL: jdbc:postgresql://wallet_db:5432/wallet_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+      WALLET_RETRY_MAX_ATTEMPTS: 7
+      WALLET_RETRY_DELAY: 100
+      WALLET_RETRY_MULTIPLIER: 2

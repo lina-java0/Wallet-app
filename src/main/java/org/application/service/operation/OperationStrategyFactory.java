@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ public class OperationStrategyFactory {
     }
 
     public OperationStrategy getStrategy(OperationType type) {
-        return strategies.get(type);
+        return Optional.ofNullable(strategies.get(type))
+                .orElseThrow(() -> new IllegalArgumentException("Unsupported operation type: " + type));
     }
 }

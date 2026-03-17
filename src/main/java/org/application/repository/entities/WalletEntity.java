@@ -21,7 +21,4 @@ public class WalletEntity {
 
     @Column(name = "balance", nullable = false)
     private BigDecimal balance;
-
-    @Version
-    private Long version;
 }

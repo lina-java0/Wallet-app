@@ -32,7 +32,7 @@ public class WalletControllerConcurrentTest {
         UUID walletId = createWallet();
 
         int threads = 1000;
-        ExecutorService executor = Executors.newFixedThreadPool(50);
+        ExecutorService executor = Executors.newFixedThreadPool(200);
 
         CountDownLatch latch = new CountDownLatch(threads);
 
@@ -53,7 +53,9 @@ public class WalletControllerConcurrentTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(request));
 
-                } catch (Exception ignored) {}
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
                 latch.countDown();
             });

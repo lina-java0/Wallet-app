@@ -6,19 +6,13 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
 
   liquibase:
     change-log: classpath:db/changelog/changelog-master.xml
     enabled: true
 
-server:
-  port: 8080
-
-logging:
-  level:
-    org.springframework: INFO
-    org.hibernate.SQL: DEBUG
+wallet:
+  retry:
+    max-attempts: ${WALLET_RETRY_MAX_ATTEMPTS:5}
+    delay: ${WALLET_RETRY_DELAY:50}
+    multiplier: ${WALLET_RETRY_MULTIPLIER:2}
